@@ -29,15 +29,45 @@ app.listen(3000, function () {
     console.log('Listening on port 3000...')
 })
 
+/*------------------------------------------------------*/
+/*------------------------------------------------------*/
 
-// Function Get Sentiment
-const getSentiment = async (tweet) => {
+// Get Coordinates Function
+const getCoordinates = async (city) => {
     return new Promise((resolve, reject) => {
-        fetch(`https://api.aylien.com/api/v1/sentiment?text=${tweet}&mode=tweet`, {
+        fetch(`https://api.aylien.com/api/v1/sentiment?text=${city}&mode=tweet`)
+        .then((res) => {
+            if (res.status != 200) {
+              console.log("Looks like there's been a problem.");
+              return reject();
+            }
+            res.json().then((data) => {
+                sentiment.polarity = data.polarity;
+                sentiment.subjectivity = data.subjectivity;
+                console.log(sentiment);
+                resolve(sentiment);
+            });
+        });
+    });
+}
+
+// Get Coordinates Call
+app.post('/getCoordinates', (req, res) => {
+    console.log(req.body);
+    let city = req.body.value;
+    getCoordinates(city).then( data => { return res.json(data) } );
+})
+
+/*------------------------------------------------------*/
+/*------------------------------------------------------*/
+
+// Get Weather Function
+const getWeather = async (coordinates) => {
+    return new Promise((resolve, reject) => {
+        fetch(`https://api.aylien.com/api/v1/sentiment?text=${coordinates}&mode=tweet`, {
         method: 'POST',
         headers: {
-            'X-AYLIEN-TextAPI-Application-ID': process.env.AYLIEN_API_ID,
-            'X-AYLIEN-TextAPI-Application-Key': process.env.AYLIEN_API_KEY
+            'key': process.env.WEATHERBIT_API_KEY
         }
         }).then((res) => {
             if (res.status != 200) {
@@ -54,9 +84,16 @@ const getSentiment = async (tweet) => {
     });
 }
 
-
-app.post('/getSentiment', (req, res) => {
+// Get Weather Call
+app.post('/getData', (req, res) => {
     console.log(req.body);
-    let tweet = req.body.value;
-    getSentiment(tweet).then( data => { return res.json(data) } );
+    
+    let city = req.body.city;
+    getCoordinates(city).then( data => { return res.json(data) } );
+    
+    let coordinates = req.body.coord;
+    getWeather(coordinates).then( data => { return res.json(data) } );
 })
+
+/*------------------------------------------------------*/
+/*------------------------------------------------------*/
