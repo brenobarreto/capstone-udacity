@@ -3,8 +3,9 @@ function handleSubmit(event) {
 
     let data = {};
     data.city = document.getElementById("city").value;
-    data.date = document.getElementById("date").value;
-    console.log(data);
+    let date = document.getElementById("date").value;
+    data.date = new Date(date);
+    console.log(data.date);
 
     console.log("::: Form Submitted :::");
     fetch('http://localhost:3000/getData', {
@@ -17,8 +18,7 @@ function handleSubmit(event) {
     .then(res => res.json())
     .then(data => { 
         console.log(data);
-        document.getElementById('results').innerHTML = 
-            `Polarity: ${data.polarity} | Subjectivity: ${data.subjectivity}`;
+        document.getElementById('results').innerHTML = `${data}`;
     });
         
 }
