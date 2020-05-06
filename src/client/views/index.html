@@ -15,7 +15,7 @@
 
         <main class="main">
             
-            <section>
+            <section class="formSection">
                 <form class="travelPlace" onsubmit="return Client.handleSubmit(event)">
                     <label>What city do you want to travel to?</label>
                     <input id="city" type="text" name="input" value="" placeholder="City">
@@ -26,8 +26,8 @@
             </section>
 
             <section class="resultsSection">
-                <strong>Results:</strong>
-                <div id="results"></div>
+                <p><strong>Let's see how the weather will be:</strong></p>
+                <div><h2 id="results"></h2></div>
             </section>
         </main>
 

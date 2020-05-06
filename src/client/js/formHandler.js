@@ -5,9 +5,8 @@ function handleSubmit(event) {
     data.city = document.getElementById("city").value;
     let date = document.getElementById("date").value;
     data.date = new Date(date);
-    console.log(data.date);
 
-    console.log("::: Form Submitted :::");
+    //Get weather from server
     fetch('http://localhost:3000/getData', {
         method: "POST",
         body: JSON.stringify(data),
@@ -16,11 +15,28 @@ function handleSubmit(event) {
         }
     })
     .then(res => res.json())
-    .then(data => { 
-        console.log(data);
-        document.getElementById('results').innerHTML = `${data}`;
+    .then(data => {
+        console.log(data.weather);
+        document.getElementById('results').innerHTML = `${data.weather}`;
     });
-        
+
+    //Get image from server
+    fetch(`http://localhost:3000/getImage?city=${data.city}`)
+    .then(res => res.json())
+    .then(data => {
+        let image = document.createElement('div');
+        image.innerHTML = "<img class='cityImage' src='"+data+"'>";
+        image.classList.add("divImage");
+
+        let resultsSection = document.querySelector('.resultsSection');
+
+        if (document.querySelectorAll('.cityImage')[0] == undefined){
+            resultsSection.appendChild(image);                 
+            } else{
+                resultsSection.replaceChild(image, document.querySelectorAll('.cityImage')[0].parentElement);
+            }
+    });
+
 }
 
 export { handleSubmit }

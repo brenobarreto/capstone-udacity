@@ -15,6 +15,7 @@ app.use(cors());
 
 app.use(express.static('dist'))
 
+const today = new Date();
 let coordinates = {};
 
 app.get('/', function (req, res) {
@@ -64,7 +65,6 @@ const getCurrentWeather = async (coordinates) => {
             res.json().then((data) => {
                 let currentWeather = "";
                 currentWeather = data.data[0].weather.description;
-                console.log(currentWeather);
                 resolve(currentWeather);
             });
         });
@@ -75,7 +75,7 @@ const getCurrentWeather = async (coordinates) => {
 /*------------------------------------------------------*/
 
 // Get Future Weather Function - Weatherbit API
-const getFutureWeather = async (coordinates, date) => {
+const getFutureWeather = async (coordinates, diffInDays) => {
     return new Promise((resolve, reject) => {
         fetch(`https://api.weatherbit.io/v2.0/forecast/daily?lat=${coordinates.lat}&lon=${coordinates.lng}&key=${process.env.WEATHERBIT_API_KEY}`, {
         method: 'POST'
@@ -85,9 +85,9 @@ const getFutureWeather = async (coordinates, date) => {
               return reject();
             }
             res.json().then((data) => {
-                let futureWeather = "";
-                futureWeather = data.data[0].weather.description;
-                console.log(futureWeather);
+                let futureWeather = "";                
+
+                futureWeather = data.data[diffInDays].weather.description;
                 resolve(futureWeather);
             });
         });
@@ -97,10 +97,32 @@ const getFutureWeather = async (coordinates, date) => {
 /*------------------------------------------------------*/
 /*------------------------------------------------------*/
 
+
+// Get Image - Pixabay API
+const getCityImage = async (city) => {
+    return new Promise((resolve, reject) => {
+        fetch(`https://pixabay.com/api/?q=${city}&key=${process.env.PIXABAY_API_KEY}`, {
+        method: 'GET'
+        }).then((res) => {
+            if (res.status != 200) {
+              console.log("Looks like there's been a problem fetching the image.");
+              return reject();
+            }
+            res.json().then((data) => {
+                let imageURL;
+                imageURL = data.hits[0].webformatURL;
+                resolve(imageURL);
+            });
+        });
+    });
+}
+
+/*------------------------------------------------------*/
+/*------------------------------------------------------*/
+
+
 // Coordinates and Weather Wrapper
 app.post('/getData', (req, res) => {
-    console.log(req.body);
-    
     let city = req.body.city;
     let date = req.body.date;
  
@@ -108,20 +130,36 @@ app.post('/getData', (req, res) => {
         let coord = {};
         coord.lat = data.lat;
         coord.lng = data.lng;
-        console.log(coord);
         return coord;
     }).then( (coord) => {
-        if (date == date){
+
+        const futureDate = new Date(date);
+        const diffInTime = futureDate.getTime() - today.getTime();
+        const diffInDays = Math.round(diffInTime / (1000 * 3600 * 24));
+
+        if (diffInDays >= 0 && diffInDays <= 7){
             getCurrentWeather(coord).then( data => { 
-                return res.json(data) 
+                return res.json({'weather': data, 'current': true}) 
             } );
+        } else if (diffInDays > 7 && diffInDays < 16){
+            getFutureWeather(coord, diffInDays).then( data => { 
+                return res.json({'weather': data, 'current': false}) 
+            } );
+        } else if (diffInDays < 0) {
+            return res.json({'weather': "Please, inform a future date.", 'current': false});
         } else {
-            getFutureWeather(coord, date).then( data => { 
-                return res.json(data) 
-            } );
+            return res.json({'weather': "There's no weather information for this date", 'current': false});
         }
     });
 
+})
+
+app.get('/getImage', (req, res) => {
+    let city = req.query.city;
+    getCityImage(city)
+    .then( data => {
+        return res.json(data);
+    })
 })
 
 /*------------------------------------------------------*/
