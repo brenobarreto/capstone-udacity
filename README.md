@@ -30,7 +30,3 @@ It also uses Express modules that allow some important functionalities, such as:
 - **body-parser** to parse JSON and URL-encoded request bodies
 - **CORS** to allow cross-origin requests
 - **node-fetch** to allow using fetch on server side
-
-## Deployment
-
-This project has been deployed with Heroku.
