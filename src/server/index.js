@@ -18,11 +18,6 @@ app.use(express.static('dist'))
 const today = new Date();
 let coordinates = {};
 
-app.get('/', function (req, res) {
-    // res.sendFile('dist/index.html')
-    res.sendFile(path.resolve('/dist/index.html'))
-})
-
 // Server
 app.listen(3000, function () {
     console.log('Listening on port 3000...')

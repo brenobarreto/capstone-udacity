@@ -22,12 +22,18 @@
                     <input id="city" type="text" name="input" value="" placeholder="City">
                     <label>When do you want to go?</label>
                     <input id="date" type="date" name="input" value="2020-01-01" min="2020-01-01" max="2020-12-31">
+                    <label>When does your trip end?</label>
+                    <input id="endDate" type="date" name="input" value="2020-01-01" min="2020-01-01" max="2020-12-31">
                     <input class="formSubmit" type="submit" value="submit">
                 </form>
             </section>
 
+            <section class="tripDuration">
+                <!--Here enters dynamically the trip duration calculated by /src/client/js/calculateDuration.js-->
+            </section> 
+
             <section class="resultsSection">
-                <p><strong>Let's see how the weather will be:</strong></p>
+                <p><strong>Let's see how the weather will be when you arrive:</strong></p>
                 <div><h2 id="results"></h2></div>
             </section>
         </main>

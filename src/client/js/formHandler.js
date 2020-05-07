@@ -1,9 +1,12 @@
+import { calculateDuration } from './calculateDuration';
+
 function handleSubmit(event) {
     event.preventDefault()
 
     let data = {};
     data.city = document.getElementById("city").value;
     let date = document.getElementById("date").value;
+    let endDate = document.getElementById("endDate").value;
     data.date = new Date(date);
 
     //Get weather from server
@@ -36,6 +39,8 @@ function handleSubmit(event) {
                 resultsSection.replaceChild(image, document.querySelectorAll('.cityImage')[0].parentElement);
             }
     });
+
+    calculateDuration(date, endDate);
 
 }
 
