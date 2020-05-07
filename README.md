@@ -30,3 +30,11 @@ It also uses Express modules that allow some important functionalities, such as:
 - **body-parser** to parse JSON and URL-encoded request bodies
 - **CORS** to allow cross-origin requests
 - **node-fetch** to allow using fetch on server side
+
+## Where to find the API Keys and username variables
+
+This project uses the `dotenv` module to manage keys and username variables. They can be found in the file `/.env`.
+
+If you need to change any value, refer to this file and change the values after the `=` signs.
+
+If you need to add a new variable, do so by including new lines to the `/.env` file.
