@@ -17,12 +17,12 @@
         <main class="main">
             
             <section class="formSection">
-                <form class="travelPlace" onsubmit="return Client.handleSubmit(event)">
+                <form class="travelPlace">
                     <label>What city do you want to travel to?</label>
                     <input id="city" type="text" name="input" value="" placeholder="City">
                     <label>When do you want to go?</label>
                     <input id="date" type="date" name="input" value="2020-01-01" min="2020-01-01" max="2020-12-31">
-                    <input type="submit" name="" value="submit" onclick="return Client.handleSubmit(event)" onsubmit="return Client.handleSubmit(event)">
+                    <input class="formSubmit" type="submit" value="submit">
                 </form>
             </section>
 
