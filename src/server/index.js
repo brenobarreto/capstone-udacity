@@ -164,3 +164,6 @@ app.get('/getImage', (req, res) => {
 
 /*------------------------------------------------------*/
 /*------------------------------------------------------*/
+
+module.exports = getCurrentWeather;
+module.exports = getCoordinates;
